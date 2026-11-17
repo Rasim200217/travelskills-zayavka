@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Travel Skills — запись на курс</title>
+<meta name="description" content="Академия туризма Travel Skills: выберите курс и оставьте заявку. Рассрочка, лицензионный сертификат.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lapis:#1B2F86; --lapis-deep:#13226A; --turq:#0E9E9A; --turq-soft:#D7F1EF;
+  --saffron:#F4A62A; --ink:#141A3A; --muted:#5A6283; --line:#DCE1EE; --paper:#F3F5FA;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5;color:var(--ink);background:var(--lapis);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+.card{width:100%;max-width:640px;background:#fff;border-radius:24px;padding:32px;box-shadow:0 30px 60px -20px rgba(6,14,60,.55)}
+.brand{font-family:"Unbounded",sans-serif;font-size:14px;color:var(--lapis)}
+h1{font-family:"Unbounded",sans-serif;font-size:clamp(24px,4vw,30px);line-height:1.15;margin:10px 0 8px}
+.sub{color:var(--muted);margin:0 0 22px}
+.lbl{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px}
+.courses{display:grid;gap:8px;margin-bottom:20px}
+.opt{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer}
+.opt:hover{border-color:#AEB8DA}
+.opt input{width:18px;height:18px;flex:none;accent-color:var(--lapis);margin:0}
+.opt .t{flex:1;min-width:0}
+.opt b{display:block;font-weight:600;font-size:15.5px;line-height:1.3}
+.opt small{color:var(--muted);font-size:13px}
+.opt .p{font-weight:700;white-space:nowrap;color:var(--lapis);font-size:16px}
+.opt:has(input:checked){border-color:var(--lapis);background:#F4F6FF}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field input:not([type=radio]){width:100%;height:50px;border:1.5px solid var(--line);border-radius:12px;padding:0 14px;font-size:16px}
+.field input:not([type=radio]):focus{outline:none;border-color:var(--lapis);box-shadow:0 0 0 3px rgba(27,47,134,.15)}
+.field.err input:not([type=radio]){border-color:#D23B3B}
+.msg{display:block;font-size:12.5px;color:#C22F2F;margin-top:4px}
+.msg:empty{margin:0}
+.field.full{grid-column:1/-1}
+.req{color:#D23B3B;font-style:normal}
+.opt-note{font-weight:400}
+#course-field{margin-bottom:20px}
+#course-field .courses{margin-bottom:0}
+#course-field.err .opt{border-color:#E9A3A3}
+.field.ok input:not([type=radio]){border-color:var(--turq)}
+.btn{display:block;width:100%;margin-top:18px;border:0;border-radius:14px;padding:16px;background:var(--saffron);font-weight:700;font-size:17px;cursor:pointer}
+.btn:hover{background:#FFB743}
+.btn:disabled{opacity:.7;cursor:default}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:18px;padding-top:16px;border-top:2px dashed var(--line)}
+.total span{color:var(--muted);font-size:14px}
+.total strong{font-family:"Unbounded",sans-serif;font-size:20px;color:var(--lapis)}
+.month{display:block;text-align:right;font-size:13px;font-weight:600;color:#08605D}
+.trust{display:flex;flex-wrap:wrap;gap:6px 14px;margin:16px 0 0;padding:0;list-style:none;font-size:13.5px;color:var(--muted)}
+.trust li::before{content:"✓ ";color:var(--turq);font-weight:700}
+.note{font-size:12px;color:var(--muted);margin:12px 0 0}
+.error{display:none;margin-top:12px;font-size:14px;color:#A82222;background:#FDECEC;border-radius:10px;padding:10px 12px}
+.done{display:none;text-align:center;padding:20px 0}
+.card.sent form{display:none}
+.card.sent .done{display:block}
+.stamp{display:inline-block;border:2.5px solid var(--turq);color:var(--turq);border-radius:10px;padding:6px 14px;font-family:"Unbounded",sans-serif;font-size:14px;transform:rotate(-4deg)}
+.done h2{font-family:"Unbounded",sans-serif;font-size:22px;margin:16px 0 8px}
+.done p{color:var(--muted);margin:0 0 8px}
+.demo{font-size:13px;background:#FFF4DC;border:1px solid #F3D9A0;border-radius:10px;padding:10px 12px;color:#6A4A06;margin-top:12px}
+.contacts{margin-top:18px;font-size:14px;color:var(--muted);text-align:center}
+.contacts a{color:var(--lapis);font-weight:600}
+@media (max-width:560px){
+  body{padding:16px 12px}
+  .card{padding:22px 16px}
+  .fields{grid-template-columns:1fr}
+  .opt{align-items:flex-start}
+  .opt input{margin-top:2px}
+}
+</style>
+</head>
+<body>
+<main class="card" id="card">
+  <form id="form" novalidate>
+    <div class="brand">Travel Skills · Академия туризма</div>
+    <h1>Выберите курс и оставьте заявку</h1>
+    <p class="sub">Перезвоним за 15 минут в рабочее время, ответим на вопросы и оформим рассрочку.</p>
+
+    <div class="field" id="course-field">
+      <span class="lbl" id="c-lbl">Курс <i class="req">*</i></span>
+      <div class="courses" id="courses" role="radiogroup" aria-labelledby="c-lbl" aria-required="true"></div>
+      <span class="msg course-msg" aria-live="polite"></span>
+    </div>
+
+    <div class="fields">
+      <div class="field">
+        <label class="lbl" for="name">Ваше имя <i class="req">*</i></label>
+        <input id="name" name="name" autocomplete="given-name" maxlength="50" placeholder="Например, Дилноза" required>
+        <span class="msg" aria-live="polite"></span>
+      </div>
+      <div class="field">
+        <label class="lbl" for="phone">Телефон <i class="req">*</i></label>
+        <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+998 __ ___ __ __" required>
+        <span class="msg" aria-live="polite"></span>
+      </div>
+      <div class="field full">
+        <label class="lbl" for="tg">Telegram <span class="opt-note">— необязательно</span></label>
+        <input id="tg" name="telegram" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="33" placeholder="@username">
+        <span class="msg" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div class="total">
+      <span>Стоимость курса</span>
+      <div><strong id="price">—</strong><span class="month" id="month"></span></div>
+    </div>
+
+    <button class="btn" type="submit">Записаться на курс</button>
+    <ul class="trust">
+      <li>Рассрочка UZUM Nasiya и ANORBANK</li>
+      <li>Сертификат по гослицензии</li>
+      <li>Старт сразу после оплаты</li>
+    </ul>
+    <p class="note">* Ориентировочно при рассрочке на 12 месяцев. Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+    <div class="error" role="alert"></div>
+  </form>
+
+  <div class="done" aria-live="polite">
+    <span class="stamp">Заявка принята</span>
+    <h2>Спасибо! Скоро перезвоним</h2>
+    <p id="done-course"></p>
+    <p>Менеджер свяжется с вами в течение 15 минут в рабочее время.</p>
+    <div class="demo" hidden>Демо-режим: заявка никуда не отправлена. Укажите webhook или Telegram-бота в блоке CONFIG.</div>
+  </div>
+
+  <div class="contacts">Вопросы: <a href="tel:+998331772223">+998 33 177 22 23</a> или <a href="https://t.me/mastertravelskills">Telegram</a></div>
+</main>
+
+<script>
+/* Куда отправлять заявки: WEBHOOK_URL (CRM, Google Таблица) или Telegram-бот.
+   Если ничего не указано — демо-режим. */
+const CONFIG = {
+  WEBHOOK_URL: "",
+  TELEGRAM_BOT_TOKEN: "",
+  TELEGRAM_CHAT_ID: "",
+  INSTALLMENT_MONTHS: 12
+};
+
+/* Курсы и цены — меняйте здесь */
+const COURSES = [
+  { title:"Базовый курс туроператор выездного туризма", lessons:"12 уроков", price:3000000 },
+  { title:"Расширенный курс туроператор выездного туризма", lessons:"18 уроков", price:3500000 },
+  { title:"Туроператор въездного туризма по Узбекистану", lessons:"11 уроков", price:3500000 },
+  { title:"Туроператор по «Выездному и въездному»", lessons:"20 уроков", price:4000000 },
+  { title:"Курс по визам 3-в-1 Schengen, UK, USA + туры по Европе", lessons:"10 уроков", price:4000000 },
+  { title:"Курс Hotel Management online", lessons:"15 уроков", price:3500000 },
+  { title:"Секреты продаж в туризме", lessons:"4 урока", price:3200000 },
+  { title:"Секреты продаж + туроператор выездного туризма", lessons:"15 уроков", price:4000000 },
+  { title:"Tashqi turizm turoperatori", lessons:"9 dars, o‘zbek tilida", price:3000000 }
+];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const mln = n => (n/1000000).toLocaleString("ru-RU") + " млн сум";
+const sum = n => n.toLocaleString("ru-RU") + " сум";
+const monthly = p => Math.ceil(p / CONFIG.INSTALLMENT_MONTHS / 1000) * 1000;
+
+$("#courses").innerHTML = COURSES.map((c, i) => `
+  <label class="opt">
+    <input type="radio" name="course" value="${i}">
+    <span class="t"><b>${esc(c.title)}</b><small>${esc(c.lessons)}</small></span>
+    <span class="p">${mln(c.price)}</span>
+  </label>`).join("");
+
+const current = () => { const r = document.querySelector('[name="course"]:checked'); return r ? COURSES[+r.value] : null; };
+function updateTotal(){
+  const c = current();
+  $("#price").textContent = c ? mln(c.price) : "Выберите курс";
+  $("#month").textContent = c ? "или от " + sum(monthly(c.price)) + "/мес*" : "";
+}
+updateTotal();
+
+/* ---------- проверки ---------- */
+/* Коды мобильных операторов Узбекистана + 71 (Ташкент, городской).
+   Если появится новый код — добавьте его сюда. */
+const UZ_CODES = ["20","33","50","55","61","62","65","66","67","69","70","71","72","73","74","75","76","77","78","79","87","88","90","91","93","94","95","97","98","99"];
+
+const digits = v => { let d = v.replace(/\D/g,""); if(d.startsWith("998")) d = d.slice(3); return d.slice(0,9); };
+
+function checkName(v){
+  v = v.trim().replace(/\s+/g," ");
+  if(!v) return "Введите имя";
+  if(v.length < 2) return "Имя слишком короткое";
+  if(!/^[A-Za-zА-Яа-яЁёЎўҚқҒғҲҳʻʼ'‘’`\- ]+$/.test(v)) return "Имя может содержать только буквы";
+  return "";
+}
+function checkPhone(v){
+  const d = digits(v);
+  if(!d.length) return "Введите номер телефона";
+  if(d.length < 9) return "Номер неполный: нужно 9 цифр после +998";
+  if(!UZ_CODES.includes(d.slice(0,2))) return "Код оператора " + d.slice(0,2) + " не существует. Проверьте номер";
+  if(/^(\d)\1+$/.test(d.slice(2))) return "Проверьте номер: похоже на неверный";
+  return "";
+}
+const normTg = v => v.trim().replace(/^(https?:\/\/)?(www\.)?(t\.me|telegram\.me)\//i,"").replace(/^@+/,"");
+function checkTg(v){
+  const u = normTg(v);
+  if(!u) return "";
+  if(!/^[A-Za-z][A-Za-z0-9_]{4,31}$/.test(u) || /__/.test(u) || u.endsWith("_"))
+    return "Юзернейм: от 5 символов, латиница, цифры и _ (например, @dilnoza_t)";
+  return "";
+}
+
+const name = $("#name"), phone = $("#phone"), tg = $("#tg");
+const rules = [[name, checkName], [phone, checkPhone], [tg, checkTg]];
+
+function showErr(input, msg){
+  const f = input.closest(".field");
+  f.classList.toggle("err", !!msg);
+  f.classList.toggle("ok", !msg && input.value.trim() !== "" && input.value.trim() !== "+998");
+  input.setAttribute("aria-invalid", msg ? "true" : "false");
+  f.querySelector(".msg").textContent = msg || "";
+}
+function showCourseErr(msg){
+  const f = $("#course-field");
+  f.classList.toggle("err", !!msg);
+  f.querySelector(".course-msg").textContent = msg || "";
+}
+
+/* проверка при уходе с поля, затем — на лету */
+rules.forEach(([inp, fn]) => {
+  /* небольшая задержка: сообщение об ошибке не сдвигает кнопку в момент нажатия */
+  inp.addEventListener("blur", () => setTimeout(() => {
+    if(inp.value.trim() && inp.value.trim() !== "+998"){ inp.dataset.touched = "1"; showErr(inp, fn(inp.value)); }
+  }, 250));
+  inp.addEventListener("input", () => { if(inp.dataset.touched) showErr(inp, fn(inp.value)); });
+});
+$("#courses").addEventListener("change", () => { updateTotal(); showCourseErr(""); });
+
+/* маска телефона */
+phone.addEventListener("focus", () => { if(!phone.value) phone.value = "+998 "; });
+phone.addEventListener("blur", () => { if(phone.value.trim() === "+998") phone.value = ""; });
+phone.addEventListener("input", () => {
+  const d = digits(phone.value);
+  let o = "+998"; if(d.length) o += " " + d.slice(0,2); if(d.length>2) o += " " + d.slice(2,5);
+  if(d.length>5) o += " " + d.slice(5,7); if(d.length>7) o += " " + d.slice(7,9);
+  phone.value = o;
+});
+/* @ в начале юзернейма */
+tg.addEventListener("blur", () => { const u = normTg(tg.value); tg.value = u ? "@" + u : ""; });
+
+function utm(){
+  try{ const p = new URLSearchParams(location.search), o = {}; ["utm_source","utm_medium","utm_campaign","utm_content","utm_term"].forEach(k => { if(p.get(k)) o[k] = p.get(k); }); return o; }catch(e){ return {}; }
+}
+
+async function sendLead(lead){
+  const tasks = [];
+  if(CONFIG.WEBHOOK_URL) tasks.push(fetch(CONFIG.WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(lead)}));
+  if(CONFIG.TELEGRAM_BOT_TOKEN && CONFIG.TELEGRAM_CHAT_ID){
+    const text = ["🧳 <b>Новая заявка — Travel Skills</b>", "Имя: "+esc(lead.name), "Телефон: "+esc(lead.phone),
+      lead.telegram ? "Telegram: "+esc(lead.telegram) : "", "Курс: "+esc(lead.course), "Цена: "+esc(lead.price),
+      Object.keys(lead.utm).length ? "UTM: "+esc(JSON.stringify(lead.utm)) : ""].filter(Boolean).join("\n");
+    tasks.push(fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_BOT_TOKEN}/sendMessage`, {method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({chat_id:CONFIG.TELEGRAM_CHAT_ID, text, parse_mode:"HTML"})}).then(r => { if(!r.ok) throw new Error(r.status); }));
+  }
+  if(!tasks.length) return "demo";
+  const res = await Promise.allSettled(tasks);
+  if(res.every(r => r.status === "rejected")) throw new Error("send failed");
+  return "sent";
+}
+
+let sending = false;
+$("#form").addEventListener("submit", async e => {
+  e.preventDefault();
+  if(sending) return;
+  const c = current();
+  showCourseErr(c ? "" : "Выберите курс");
+  let firstBad = c ? null : $("#courses input");
+  rules.forEach(([inp, fn]) => {
+    inp.dataset.touched = "1";
+    const m = fn(inp.value); showErr(inp, m);
+    if(m && !firstBad) firstBad = inp;
+  });
+  if(firstBad){
+    firstBad.focus({preventScroll:true});
+    (firstBad.closest(".field") || firstBad).scrollIntoView({block:"center", behavior:"smooth"});
+    return;
+  }
+
+  const u = normTg(tg.value);
+  const lead = {
+    name: name.value.trim().replace(/\s+/g," "),
+    phone: "+998" + digits(phone.value),
+    telegram: u ? "@" + u : "",
+    course: c.title, price: sum(c.price),
+    page: location.href, utm: utm(), created: new Date().toISOString()
+  };
+  const btn = e.target.querySelector(".btn"), err = $(".error");
+  sending = true; btn.disabled = true; btn.textContent = "Отправляем…"; err.style.display = "none";
+  try{
+    const r = await sendLead(lead);
+    $("#done-course").textContent = "Курс: " + c.title + " — " + mln(c.price);
+    $(".demo").hidden = r !== "demo";
+    $("#card").classList.add("sent");
+    if(typeof window.fbq === "function") window.fbq("track","Lead");
+    if(typeof window.gtag === "function") window.gtag("event","generate_lead");
+  }catch(ex){
+    err.textContent = "Не удалось отправить заявку. Позвоните: +998 33 177 22 23 или напишите в Telegram @mastertravelskills.";
+    err.style.display = "block";
+  }finally{ sending = false; btn.disabled = false; btn.textContent = "Записаться на курс"; }
+});
+</script>
+</body>
+</html>
